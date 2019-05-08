@@ -78,6 +78,21 @@ class UsersController < ApplicationController
     flash[:notice] = "ログアウトしました"
     redirect_to("/login")
   end
+
+  def guest_login
+    @user = User.find_by(id: 1)
+    if @user
+      session[:user_id] = @user.id
+      flash[:notice] = "ログインしました"
+      redirect_to("/posts/index")
+    else
+      @error_message = "メールアドレスまたはパスワードが間違っています"
+      @email = params[:email]
+      @password = params[:password]
+      render("users/login_form")
+    end
+      
+  end
   
   def ensure_correct_user # 正しいユーザーかを確かめるという意味
     if params[:id].to_i != @current_user.id
